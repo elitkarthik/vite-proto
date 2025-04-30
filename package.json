@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "grpc:gen": "protoc --plugin=protoc-gen-ts=node_modules\\.bin\\protoc-gen-ts.cmd --ts_out ./src/proto/generated -I ./src/proto ./src/proto/*.proto"
   },
   "devDependencies": {    
     "typescript": "~5.8.3",
