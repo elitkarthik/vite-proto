@@ -2,12 +2,9 @@ import './style.css'
 import typescriptLogo from './typescript.svg'
 import viteLogo from '/vite.svg'
 import { setupCounter } from './counter.ts'
-import { HealthClient } from './proto/generated/health.client.ts';
-import { HealthCheckRequest } from './proto/generated/health.ts';
-import { GrpcWebFetchTransport } from '@protobuf-ts/grpcweb-transport';
-// import { GrpcTransport } from '@protobuf-ts/grpc-transport';
 
-// import * as grpc from '@grpc/grpc-js';
+import { HealthClient } from './proto/generated/health_grpc_web_pb';
+import { HealthCheckRequest } from './proto/generated/health_pb';
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <div>
@@ -29,18 +26,17 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 
 setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
 
-var request: HealthCheckRequest = { service: ""};
+//write code to call client check method
+const client = new HealthClient('http://localhost:8080');
+const request =  new HealthCheckRequest();
 
-let transport = new GrpcWebFetchTransport({
-  baseUrl: "https://localhost:7084"
-});
-
-var client = new HealthClient(transport);
-
-client.check(request).then(rpcResponse => {
-   console.log(rpcResponse.response.status); // Accessing the 'response' property of FinishedUnaryCall
-  }).catch(error => {
-  console.error("Error calling HealthCheck:", error);
-});
-
+// const request = new google.protobuf.Empty();
+client.check(request, {}, (err, response) => {
+  if (err) {
+    console.error('Error calling check method:', err);
+    return;
+  }
+  console.log('Health check response:', response.toObject());
+}
+);
 
