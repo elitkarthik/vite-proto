@@ -1,0 +1,8 @@
+{
+	"type": "commonjs",
+	"main": "health_pb.js",
+	"types": "health_pb.d.ts",
+	"dependencies": {
+		"google-protobuf": "^3.21.2"
+	}
+}

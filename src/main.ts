@@ -3,8 +3,9 @@ import typescriptLogo from './typescript.svg'
 import viteLogo from '/vite.svg'
 import { setupCounter } from './counter.ts'
 
-import { HealthClient } from './proto/generated/health_grpc_web_pb';
-import { HealthCheckRequest } from './proto/generated/health_pb';
+import { HealthClient } from './proto/generated/HealthServiceClientPb';
+// import { HealthCheckRequest } from './proto/generated/health_pb';
+import * as grpcObjects from './proto/generated/health_pb.js';
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <div>
@@ -26,17 +27,20 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 
 setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
 
-//write code to call client check method
-const client = new HealthClient('http://localhost:8080');
-const request =  new HealthCheckRequest();
+// //write code to call client check method
+const client = new HealthClient('http://localhost:7084');
+const request =  new grpcObjects.HealthCheckRequest();
+console.log('Request:', request.toObject());
 
 // const request = new google.protobuf.Empty();
-client.check(request, {}, (err, response) => {
-  if (err) {
-    console.error('Error calling check method:', err);
-    return;
-  }
-  console.log('Health check response:', response.toObject());
-}
-);
+// client.check(request, {}, (err, response) => {
+//   if (err) {
+//     console.error('Error calling check method:', err);
+//     return;
+//   }
+//   console.log('Health check response:', response.toObject());
+// }
+// );
+
+
 

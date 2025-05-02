@@ -10,13 +10,12 @@
     "grpc:gen": "protoc --plugin=protoc-gen-ts=node_modules\\.bin\\protoc-gen-ts.cmd --ts_out ./src/proto/generated -I ./src/proto ./src/proto/*.proto"
   },
   "devDependencies": {
-    "@originjs/vite-plugin-commonjs": "^1.0.3",
     "typescript": "~5.8.3",
     "vite": "^6.3.2"
   },
   "dependencies": {
-    "@vitejs/plugin-vue": "^5.2.3",
     "google-protobuf": "^3.21.4",
-    "grpc-web": "^1.5.0"
+    "grpc-web": "^1.5.0",
+    "vite-plugin-commonjs": "^0.10.4"
   }
 }
