@@ -5,3 +5,6 @@ https://github.com/timostamm/protobuf-ts
 
 https://github.com/vitejs/vite/discussions/8926
 https://github.com/grpc/grpc-web/issues/1242
+
+--ONLY TYPESCRIPT (Needs both @protobuf-ts/plugin and @protobuf-ts/grpcweb-transport package)
+C:\dev\ubo\vite-proto> protoc --plugin=protoc-gen-ts=node_modules\\.bin\\protoc-gen-ts.cmd --ts_out ./src/proto/generated -I ./src/proto ./src/proto/*.proto
