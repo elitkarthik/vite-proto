@@ -1,0 +1,287 @@
+syntax = "proto3";
+
+option csharp_namespace = "TellerOfflineService";
+
+package offlineMessaging;
+
+service OfflineMessaging {
+	rpc GetOfflineParameterData(GetOfflineParameterDataRequest) returns (GetOfflineParameterDataResponse);
+	rpc GetOfflineTransactionData(GetOfflineTransactionDataRequest) returns (GetOfflineTransactionDataResponse);
+	rpc GetCachedResponseData(GetCachedResponsesRequest) returns (GetCachedResponsesResponse);
+	rpc GetUserSettingsData(GetUserSettingsRequest) returns (GetUserSettingsResponse);
+	rpc GetDeadletterQueueData(GetDeadletterQueueDataRequest) returns (GetDeadletterQueueDataResponse);
+	rpc GetOfflineLogData(GetOfflineLogItemsRequest) returns (GetOfflineLogItemsResponse);
+
+	rpc SaveOfflineParameterData (SaveOfflineParameterRequest) returns (OfflineResponse);
+	rpc SaveOfflineTransactionData (SaveOfflineTransactionReqeust) returns (OfflineResponse);
+	rpc SaveUserSettingsData(SaveUserSettingsRequest) returns (OfflineResponse);
+	rpc SaveDeadletterQueueData(SaveDeadletterQueueDataRequest) returns (OfflineResponse);
+	rpc SaveCachedResponseData (SaveCachedResponseRequest) returns (OfflineResponse);
+	rpc SaveOfflineLogData (SaveOfflineLogItemRequest) returns (OfflineResponse);
+
+	rpc DeleteOfflineParameterData (DeleteOfflineParameterRequest) returns (OfflineResponse);
+	rpc DeleteOfflneTransactionData (DeleteOfflineTransactionRequest) returns (OfflineResponse);
+	rpc DeleteUserSettingData (DeleteUserSettingRequest) returns (OfflineResponse);
+	rpc DeleteDeadletterQueueData(DeleteDeadletterQueueDataRequest) returns (OfflineResponse);
+
+	rpc LogOnUser (LogonUserRequest) returns (OfflineResponse);
+	rpc LogOffUser (LogOffUserRequest) returns (OfflineResponse);
+
+	rpc GetWorkstationName (GetWorkstationNameRequest) returns (GetWorkstationNameResponse);
+}
+
+//----------------------------
+// offline data models
+//----------------------------
+
+message OfflineMessageHeader {
+	int32 institutionID = 1;
+	int32 branchID = 2;
+	string userID = 3;
+}
+
+message OfflineResponse {
+	OfflineMessageHeader messageHeader = 1;
+	string status = 2;
+	string statusMessage = 3;
+}
+
+message CachedParameterItem {
+	OfflineMessageHeader header = 1;
+	string parameterType = 2;
+	string parameterValue = 3;
+	string endpointURI = 4;
+	string dateAdded = 5;
+	string expirationDate = 6;
+}
+
+message CachedTransactionItem {
+	OfflineMessageHeader header = 1;
+	string processingDate = 2;
+	string endpointURI = 3;
+	string payloadType = 4;
+	string payload = 5;
+	string lastResult = 7;
+	string lastSendAttempt = 8;
+	int32 sendAttempts = 9;
+	string dateAdded = 10;
+	string expirationDate = 11;
+	int32 rowID = 12;
+}
+
+message CachedResponseItem {
+	CachedTransactionItem transactionInfo = 1;
+	string responsePayload = 2;
+}
+
+message UserSettingsItem {
+	OfflineMessageHeader header = 1;
+	string instanceName = 2;
+	string settingKey = 3;
+	string setting = 4;
+}
+
+message OfflineLoggingItem {
+	OfflineMessageHeader header = 1;
+	string methodName = 2;
+	string logMessage = 3;
+	string dateAdded = 4;
+	string expirationDate = 5;
+}
+
+//----------------------------
+
+
+//----------------------------
+// Offline parameter messages
+//----------------------------
+message GetOfflineParameterDataRequest {
+	OfflineMessageHeader messageHeader = 1;
+	string payloadType = 2;
+}
+
+message GetOfflineParameterDataResponse {
+	OfflineResponse responseStatus = 1;
+	repeated CachedParameterItem parameters = 2;
+}
+
+message SaveOfflineParameterRequest {
+	OfflineMessageHeader messageHeader = 1;
+	string payloadType = 2;
+	string payload = 3;
+	string enpoint = 4;
+	int32 expiresIn = 5;
+	string expirationUnit = 6;
+}
+
+message DeleteOfflineParameterRequest {
+	OfflineMessageHeader messageHeader = 1;
+	string payloadType = 2;
+}
+//-----------------------------
+
+//-----------------------------
+// Offline transaction messages
+//-----------------------------
+message GetOfflineTransactionDataRequest {
+	OfflineMessageHeader messageHeader = 1;
+	string payloadType = 2;
+	string processingDate = 3;
+}
+
+message GetOfflineTransactionDataResponse {
+	OfflineResponse responseStatus = 1;
+	repeated CachedTransactionItem transactions = 2;
+}
+
+message SaveOfflineTransactionReqeust {
+	OfflineMessageHeader messageHeader = 1;
+	string processingDate = 2;
+	string payloadType = 3;
+	string payload = 4;
+	string enpoint = 5;
+	string sendResult = 6;
+	string lastSendAttempt = 7;
+}
+
+message DeleteOfflineTransactionRequest  {
+	OfflineMessageHeader messageHeader = 1;
+	string payloadType = 2;
+	string processingDate = 3;
+	string dateAdded = 4;
+	int32 rowID = 5;
+}
+//------------------------------
+
+//------------------------------
+// Cached response information
+//------------------------------
+message GetCachedResponsesRequest {
+	OfflineMessageHeader messageHeader = 1;
+	string processingDate = 2;
+	string payloadType = 3;
+}
+
+message GetCachedResponsesResponse {
+	OfflineResponse responseStatus = 1;
+	repeated CachedResponseItem cachedResponses = 2;
+}
+
+message SaveCachedResponseRequest {
+	CachedResponseItem responseItem = 2;
+}
+
+message DeleteCachedResponseRequest {
+	OfflineMessageHeader messageHeader = 1;
+	string payloadType = 2;
+	string processingDate = 3;
+	string dateAdded = 4; 
+	string responsePayload = 5;
+}
+//-------------------------------
+
+//-------------------------------
+// Deadletter Queue items
+//-------------------------------
+message GetDeadletterQueueDataRequest {
+	OfflineMessageHeader messageHeader = 1;
+	string payloadType = 2;
+	string processingDate = 3;
+	string dateAdded = 4;
+}
+
+message GetDeadletterQueueDataResponse {
+	OfflineResponse responseStatus = 1;
+	repeated CachedTransactionItem deadletterItems = 2;
+}
+
+message SaveDeadletterQueueDataRequest {
+	CachedTransactionItem transactionItem = 1;
+	string deadLetterExpiration = 2;
+}
+
+message SaveDeadletterQueueDataResponse {
+	OfflineResponse responseStatus = 1;
+	CachedTransactionItem transactionItem = 2;
+}
+
+message DeleteDeadletterQueueDataRequest {
+	OfflineMessageHeader messageHeader = 1;
+	string payloadType = 2;
+	string processingDate = 3;
+	string dateAdded = 4;
+	int32 rowID = 5;
+}
+//-------------------------------
+
+//-------------------------------
+// User settings
+//-------------------------------
+message GetUserSettingsRequest {
+	OfflineMessageHeader messageHeader = 1;
+	string instanceName = 2;
+	string settingKey = 3;
+}
+
+message GetUserSettingsResponse {
+	OfflineResponse responseStatus = 1;
+	repeated UserSettingsItem userSettings = 2;
+}
+
+message SaveUserSettingsRequest {
+	OfflineMessageHeader messageHeader = 1;
+	string instanceName = 2;
+	string settingKey = 3;
+	string setting = 4;
+}
+
+message DeleteUserSettingRequest {
+	OfflineMessageHeader messageHeader = 1;
+	string instanceName = 2;
+	string settingKey = 3;
+}
+//------------------------------
+
+//------------------------------
+// Logging user on/off and tracking tokens
+//------------------------------
+message LogonUserRequest {
+	OfflineMessageHeader messageHeader = 1;
+	string userToken = 2;
+	string tokenExpiration = 3;
+}
+
+message LogOffUserRequest {
+	OfflineMessageHeader messageHeader = 1;
+}
+//-----------------------------
+
+//-----------------------------
+// Getting workstation name
+//-----------------------------
+message GetWorkstationNameRequest {
+	string workstationID = 1;
+}
+
+message GetWorkstationNameResponse {
+	string workstationID = 1;
+}
+//------------------------------
+
+//------------------------------
+// Get offline log items
+//------------------------------
+message GetOfflineLogItemsRequest {
+	OfflineMessageHeader messageHeader = 1;
+}
+
+message GetOfflineLogItemsResponse {
+	OfflineResponse responseStatus = 1;
+	repeated OfflineLoggingItem LogItems = 2;
+}
+
+message SaveOfflineLogItemRequest {
+	OfflineLoggingItem logItem = 1;
+}
+//------------------------------
+

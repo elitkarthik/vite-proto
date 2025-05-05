@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package printing;
+
+option csharp_namespace = "JackHenry.Teller.PrintingService";
+
+service Printing {
+	rpc PrintLines(PrintLinesRequest) returns (PrintingServiceResponse);
+	rpc Initialize(InitializeRequest) returns (PrintingServiceResponse);
+}
+
+//-----------------------------
+// Printing Service Messages
+//-----------------------------
+message PrintLinesRequest {
+	PrintingMessageHeader header = 1;
+	repeated string linesToPrint = 2;
+}
+
+message InitializeRequest {
+	PrintingMessageHeader header = 1;
+	repeated PrinterTypeProto printerTypes = 2;
+}
+
+//-----------------------------
+// Printing Service Models
+//-----------------------------
+
+message PrintingServiceResponse {
+	bool success = 1;
+	string errorMessage = 2;
+}
+
+message PrintingMessageHeader {
+	string printerName = 1;
+	string printerType = 2;
+	string institutionNumber = 3;
+	string institutionGUID = 4;
+	string token = 5;
+}
+
+message PrinterTypeProto {
+	string typeName = 1;
+	repeated PrintCodeProto PrintCodes = 2;
+}
+
+message PrintCodeProto {
+	string name = 1;
+	string hexCode = 2;
+}

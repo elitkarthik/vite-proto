@@ -8,6 +8,8 @@ import { GrpcWebFetchTransport } from '@protobuf-ts/grpcweb-transport';
 // import { GrpcTransport } from '@protobuf-ts/grpc-transport';
 
 // import * as grpc from '@grpc/grpc-js';
+import { OfflineMessagingClient } from './proto/generated/offlinemessaging.client';
+import { GetWorkstationNameRequest } from './proto/generated/offlinemessaging';
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <div>
@@ -43,4 +45,20 @@ client.check(request).then(rpcResponse => {
   console.error("Error calling HealthCheck:", error);
 });
 
+var OfflineMessagingClientclient = new OfflineMessagingClient(transport);
+const getWorkstationNameRequest = {} as GetWorkstationNameRequest;
+getWorkstationNameRequest.workstationID = "";
 
+OfflineMessagingClientclient.getWorkstationName(getWorkstationNameRequest).then(rpcResponse => {
+   console.log("Workstation Name:", rpcResponse.response.workstationID); // Accessing the 'response' property of FinishedUnaryCall
+  }).catch(error => {
+  console.error("Error calling GetWorkstationName:", error);
+  });
+
+  const asyncCallTest = OfflineMessagingClientclient.getWorkstationName(getWorkstationNameRequest);
+  console.log("Headers: ", await asyncCallTest.headers);
+  console.log("Status: ", await asyncCallTest.status);
+  console.log("Server Response: ",await asyncCallTest.response);
+  console.log("Server Request: ", await asyncCallTest.request);
+  console.log("Server requestHeaders: ", await asyncCallTest.requestHeaders);
+  console.log("Server trailers: ", await asyncCallTest.trailers);

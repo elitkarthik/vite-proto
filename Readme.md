@@ -1,7 +1,8 @@
 https://www.npmjs.com/package/@protobuf-ts/plugin
 https://www.npmjs.com/package/@protobuf-ts/grpcweb-transport
 https://github.com/timostamm/protobuf-ts
-
+https://github.com/timostamm/protobuf-ts/blob/main/MANUAL.md
+https://github.com/timostamm/protobuf-ts/tree/main/packages
 
 https://github.com/vitejs/vite/discussions/8926
 https://github.com/grpc/grpc-web/issues/1242
